@@ -1,8 +1,12 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-import Actions from './actions';
-import Menu from './menu';
+const Menu = dynamic(() => import('./menu'), {
+  ssr: false,
+});
+const Actions = dynamic(() => import('./actions'), {
+  ssr: false,
+});
 import sidebarMenu from '@/config/menu/sidebar-static';
 import { useWorkspaces } from '@/hooks/data';
 import { useWorkspace } from '@/providers/workspace';
