@@ -1,17 +1,32 @@
+/* use client */
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getProviders, signIn, useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import isEmail from 'validator/lib/isEmail';
 
-import Meta from '@/components/Meta/index';
-import { AuthLayout } from '@/layouts/index';
+// Updated imports to use path aliases
+import Meta from '@/components/Meta';
+import AuthLayout from '@/layouts/AuthLayout';
 
-const Login = () => {
+// Define a type for the social providers
+type SocialProvider = {
+  id: string;
+  name: string;
+  type: string;
+};
+
+// Define a type for the structure of the providers object
+type Providers = {
+  [providerId: string]: SocialProvider;
+};
+
+export default function Login() {
   const { status } = useSession();
   const [email, setEmail] = useState('');
   const [isSubmitting, setSubmittingState] = useState(false);
-  const [socialProviders, setSocialProviders] = useState([]);
+  const [socialProviders, setSocialProviders] = useState<SocialProvider[]>([]);
+
   const validate = isEmail(email);
 
   const handleEmailChange = (event) => setEmail(event.target.value);
@@ -21,7 +36,7 @@ const Login = () => {
     setSubmittingState(true);
     const response = await signIn('email', { email, redirect: false });
 
-    if (response.error === null) {
+    if (response?.error === null) {
       toast.success(`Please check your email (${email}) for the login link.`, {
         duration: 5000,
       });
@@ -31,20 +46,18 @@ const Login = () => {
     setSubmittingState(false);
   };
 
-  const signInWithSocial = (socialId) => {
+  const signInWithSocial = (socialId: string) => {
     signIn(socialId);
   };
 
   useEffect(() => {
     (async () => {
-      const socialProviders = [];
-      const { email, ...providers } = await getProviders();
-
-      for (const provider in providers) {
-        socialProviders.push(providers[provider]);
-      }
-
-      setSocialProviders([...socialProviders]);
+      const providers: Providers = await getProviders() || {};
+      // Filter out the email provider and set the social providers
+      const socialProvidersList = Object.values(providers).filter(
+        (provider) => provider.type !== 'email'
+      );
+      setSocialProviders(socialProvidersList);
     })();
   }, []);
 
@@ -91,9 +104,9 @@ const Login = () => {
           <>
             <span className="text-sm text-gray-400">or sign in with</span>
             <div className="flex flex-col w-full space-y-3">
-              {socialProviders.map((provider, index) => (
+              {socialProviders.map((provider) => (
                 <button
-                  key={index}
+                  key={provider.id}
                   className="py-2 bg-gray-100 border rounded hover:bg-gray-50 disabled:opacity-75"
                   disabled={status === 'loading'}
                   onClick={() => signInWithSocial(provider.id)}
@@ -107,6 +120,4 @@ const Login = () => {
       </div>
     </AuthLayout>
   );
-};
-
-export default Login;
+}

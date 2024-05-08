@@ -17,7 +17,8 @@ const Layout = ({ children, pageProps }) => {
   const swrOptions = swrConfig();
   const router = useRouter(); // useRouter replaces useNavigation
 
-  TopBarProgress.config(progressBarConfig());
+  // Apply the progressBarConfig as an object directly without invoking it as a function
+  TopBarProgress.config(progressBarConfig);
 
   useEffect(() => {
     // Client-side only code
