@@ -5,17 +5,21 @@ import { useTheme } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
 
 const AuthLayout = ({ children }) => {
-  const router = useRouter();
   const { status } = useSession();
   const { setTheme } = useTheme();
+  const router = useRouter();
 
+  // useEffect to set the theme should be called at the top level, not conditionally
   useEffect(() => {
     setTheme('light');
+  }, [setTheme]);
 
+  // Redirect authenticated users to the '/account' page
+  useEffect(() => {
     if (status === 'authenticated') {
       router.push('/account');
     }
-  }, [setTheme, status, router]);
+  }, [status, router]);
 
   if (status === 'loading') return <></>;
   return (
