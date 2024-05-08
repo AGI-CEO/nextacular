@@ -1,11 +1,10 @@
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import {
   CheckIcon,
   ChevronUpDownIcon,
   PlusIcon,
 } from '@heroicons/react/24/solid';
-import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 import Button from '@/components/Button/index';
@@ -13,6 +12,14 @@ import Modal from '@/components/Modal/index';
 import { useWorkspaces } from '@/hooks/data/index';
 import api from '@/lib/common/api';
 import { useWorkspace } from '@/providers/workspace';
+
+// Conditionally use hooks that are only meant for the client-side
+const isClient = typeof window !== 'undefined';
+
+const useState = isClient ? require('react').useState : () => [null, () => {}];
+const useRouter = isClient ? require('next/router').useRouter : () => ({});
+
+// Removed duplicate useRouter declaration
 
 const Actions = () => {
   const { data, isLoading } = useWorkspaces();
