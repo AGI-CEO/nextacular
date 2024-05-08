@@ -1,23 +1,22 @@
-import { createContext, useContext, useState } from 'react';
+// workspace.js - Client Component
+// "use client" indicates that this component and all its descendants are client components.
+
+"use client"; // This directive marks this module as a Client Component
+
+import { createContext, useContext } from 'react';
 
 const initialState = {
-  setWorkspace: () => {},
   workspace: null,
 };
 
-const WorkspaceContext = createContext(initialState);
+export const WorkspaceContext = createContext(initialState);
 
 export const useWorkspace = () => useContext(WorkspaceContext);
 
-const WorkspaceProvider = ({ children }) => {
-  const [workspace, setWorkspaceState] = useState(null);
-
-  const setWorkspace = (workspace) => {
-    setWorkspaceState(workspace);
-  };
-
+export const WorkspaceProvider = ({ children }) => {
+  // Client-side state management can be implemented here if necessary
   return (
-    <WorkspaceContext.Provider value={{ setWorkspace, workspace }}>
+    <WorkspaceContext.Provider value={initialState}>
       {children}
     </WorkspaceContext.Provider>
   );

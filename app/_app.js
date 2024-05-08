@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'; // Updated import to use next/navigation
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
 import ReactGA from 'react-ga';
@@ -17,26 +17,41 @@ const App = ({ Component, pageProps }) => {
   const router = useRouter();
   const swrOptions = swrConfig();
 
-  Router.events.on('routeChangeStart', () => setProgress(true));
-  Router.events.on('routeChangeComplete', () => setProgress(false));
-  TopBarProgress.config(progressBarConfig());
-
+  // Client-side only effect for route change progress bar
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
-      ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
+    const handleRouteChangeStart = () => setProgress(true);
+    const handleRouteChangeComplete = () => setProgress(false);
+
+    // Set up route change event listeners
+    if (typeof window !== 'undefined') {
+      router.events.on('routeChangeStart', handleRouteChangeStart);
+      router.events.on('routeChangeComplete', handleRouteChangeComplete);
+      TopBarProgress.config(progressBarConfig());
+
+      // Clean up event listeners on unmount
+      return () => {
+        router.events.off('routeChangeStart', handleRouteChangeStart);
+        router.events.off('routeChangeComplete', handleRouteChangeComplete);
+      };
     }
-  }, []);
+  }, [router.events]);
 
+  // Client-side only effect for Google Analytics
   useEffect(() => {
-    const handleRouteChange = (url) => {
-      ReactGA.pageview(url);
-    };
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+      ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
+      const handleRouteChange = (url) => {
+        ReactGA.pageview(url);
+      };
 
-    router.events.on('routeChangeComplete', handleRouteChange);
+      // Set up Google Analytics event listener
+      router.events.on('routeChangeComplete', handleRouteChange);
 
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
+      // Clean up the Google Analytics event listener on unmount
+      return () => {
+        router.events.off('routeChangeComplete', handleRouteChange);
+      };
+    }
   }, [router.events]);
 
   return (

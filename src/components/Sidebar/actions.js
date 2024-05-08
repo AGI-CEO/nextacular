@@ -5,7 +5,7 @@ import {
   ChevronUpDownIcon,
   PlusIcon,
 } from '@heroicons/react/24/solid';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 import Button from '@/components/Button/index';

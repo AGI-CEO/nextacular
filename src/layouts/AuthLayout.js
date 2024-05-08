@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'; // Updated import to use next/navigation
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
