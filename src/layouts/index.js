@@ -1,4 +1,4 @@
-import AccountLayout from './AccountLayout';
+import AccountLayout from '../../app/account/AccountLayout';
 import AuthLayout from './AuthLayout';
 import LandingLayout from './LandingLayout';
 import PublicLayout from './PublicLayout';
