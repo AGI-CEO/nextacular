@@ -1,6 +1,14 @@
 import { Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import dynamic from 'next/dynamic';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+
+// Dynamically import Dialog and Transition for client-side rendering only
+const Dialog = dynamic(() => import('@headlessui/react').then((mod) => mod.Dialog), {
+  ssr: false,
+});
+const Transition = dynamic(() => import('@headlessui/react').then((mod) => mod.Transition), {
+  ssr: false,
+});
 
 const Modal = ({ children, show, title, toggle }) => {
   return (
