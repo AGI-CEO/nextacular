@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
+// Dynamically import Menu and Actions for client-side rendering only
 const Menu = dynamic(() => import('./menu'), {
   ssr: false,
 });
