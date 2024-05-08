@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
+import dynamic from 'next/dynamic';
 
 import Button from '@/components/Button/index';
 import Meta from '@/components/Meta/index';
-import Modal from '@/components/Modal/index';
+const Modal = dynamic(() => import('@/components/Modal/index'), {
+  ssr: false,
+});
 import Card from '@/components/Card/index';
 import Content from '@/components/Content/index';
 import { AccountLayout } from '@/layouts/index';
