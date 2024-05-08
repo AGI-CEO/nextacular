@@ -1,8 +1,15 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Updated import to use next/navigation
+import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
+
+// Dynamically import useEffect and useRouter for client-side rendering only
+const useEffect = dynamic(() => import('react').then((mod) => mod.useEffect), {
+  ssr: false,
+});
+const useRouter = dynamic(() => import('next/navigation').then((mod) => mod.useRouter), {
+  ssr: false,
+});
 
 const AuthLayout = ({ children }) => {
   const { status } = useSession();
