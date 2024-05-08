@@ -26,12 +26,12 @@ const authOptions = {
   },
   debug: !(process.env.NODE_ENV === 'production'),
   events: {
-    signIn: async ({ user, isNewUser }) => {
+    signIn: async ({ user, account, isNewUser }) => {
       // Create a payment account for new users or users without payment information
       const customerPayment = await getPayment(user.email);
 
       if (isNewUser || customerPayment === null || user.createdAt === null) {
-        await Promise.all([createPaymentAccount(user.email, user.id)]);
+        await createPaymentAccount(user.email, user.id);
       }
     },
   },
@@ -54,7 +54,8 @@ const authOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: 'jwt',
+    // Correct the strategy type to match the expected type for SessionOptions
+    strategy: 'jwt' as const,
   },
 };
 
