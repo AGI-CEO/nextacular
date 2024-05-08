@@ -9,6 +9,7 @@ import { SWRConfig } from 'swr';
 import progressBarConfig from '@/config/progress-bar/index';
 import swrConfig from '@/config/swr/index';
 import WorkspaceProvider from '@/providers/workspace';
+import RootLayout from './RootLayout'; // Import the RootLayout component
 
 import '@/styles/globals.css';
 
@@ -60,7 +61,9 @@ const App = ({ Component, pageProps }) => {
         <ThemeProvider attribute="class">
           <WorkspaceProvider>
             {progress && <TopBarProgress />}
-            <Component {...pageProps} />
+            <RootLayout> {/* Wrap the Component with the RootLayout */}
+              <Component {...pageProps} />
+            </RootLayout>
           </WorkspaceProvider>
         </ThemeProvider>
       </SWRConfig>
