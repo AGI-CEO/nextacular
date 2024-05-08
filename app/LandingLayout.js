@@ -1,10 +1,6 @@
-import dynamic from 'next/dynamic';
+"use client";
+import { useEffect } from 'react';
 import { useTheme } from 'next-themes';
-
-// Dynamically import useEffect for client-side rendering only
-const useEffect = dynamic(() => import('react').then((mod) => mod.useEffect), {
-  ssr: false,
-});
 
 const LandingLayout = ({ children }) => {
   const { setTheme } = useTheme();

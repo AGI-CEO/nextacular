@@ -19,7 +19,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "src/*",
+        "app/*" // Added path to include the 'app' directory
+      ],
+      "@/layouts/*": [
+        "app/layouts/*" // Corrected path to include the 'app/layouts' directory for layouts
       ],
       "@/prisma/*": [
         "prisma/*"

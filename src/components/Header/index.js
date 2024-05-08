@@ -1,5 +1,6 @@
-import { Fragment } from 'react';
-import { Menu, Transition } from '@headlessui/react';
+"use client";
+import { Fragment, useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import {
   ArrowRightOnRectangleIcon,
   CogIcon,
@@ -13,13 +14,25 @@ import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 
+const Menu = dynamic(() => import('@headlessui/react').then((mod) => mod.Menu), {
+  ssr: false,
+});
+const Transition = dynamic(() => import('@headlessui/react').then((mod) => mod.Transition), {
+  ssr: false,
+});
+
 const Header = () => {
-  const { data } = useSession();
+  const { data: sessionData } = useSession();
   const { theme, setTheme } = useTheme();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // Set the isClient state to true once the component has mounted
+    setIsClient(true);
+  }, []);
 
   const logOut = () => {
     const result = confirm('Are you sure you want to logout?');
-
     if (result) {
       signOut({ callbackUrl: '/' });
     }
@@ -27,101 +40,105 @@ const Header = () => {
 
   const toggleTheme = (event) => {
     event.preventDefault();
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    if (setTheme) {
+      setTheme(theme === 'dark' ? 'light' : 'dark');
+    }
   };
 
   return (
     <div className="flex flex-row items-center justify-between">
       <div>
         <h5 className="font-bold text-gray-800 dark:text-gray-200">
-          {data && data.user && (
-            <span>{data.user.name || data.user.email}</span>
+          {sessionData && sessionData.user && (
+            <span>{sessionData.user.name || sessionData.user.email}</span>
           )}
         </h5>
       </div>
-      <Menu as="div" className="relative inline-block text-left">
-        <div>
-          <Menu.Button className="flex items-center justify-center px-5 py-2 space-x-3 border rounded hover:bg-gray-100 dark:hover:text-gray-800">
-            <CogIcon aria-hidden="true" className="w-5 h-5" />
-            <span>Settings</span>
-          </Menu.Button>
-        </div>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute right-0 w-40 mt-2 origin-top-right bg-white border divide-y divide-gray-100 rounded">
-            <div className="p-2">
-              <Menu.Item>
-                <Link
-                  href="/account/settings"
-                  className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
-                >
-                  <UserCircleIcon aria-hidden="true" className="w-5 h-5" />
-                  <span>Account</span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item>
-                <Link
-                  href="/account/billing"
-                  className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
-                >
-                  <CreditCardIcon aria-hidden="true" className="w-5 h-5" />
-                  <span>Billing</span>
-                </Link>
-              </Menu.Item>
-            </div>
-            <div className="p-2">
-              <Menu.Item>
-                <Link
-                  href="/"
-                  className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
-                >
-                  <ComputerDesktopIcon aria-hidden="true" className="w-5 h-5" />
-                  <span>Landing Page</span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item>
-                <button
-                  className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
-                  onClick={toggleTheme}
-                >
-                  {theme === 'dark' ? (
-                    <>
-                      <SunIcon className="w-5 h-5" />
-                      <span>Light Mode</span>
-                    </>
-                  ) : (
-                    <>
-                      <MoonIcon className="w-5 h-5" />
-                      <span>Dark Mode</span>
-                    </>
-                  )}
-                </button>
-              </Menu.Item>
-            </div>
-            <div className="p-2">
-              <Menu.Item>
-                <button
-                  className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
-                  onClick={logOut}
-                >
-                  <ArrowRightOnRectangleIcon
-                    aria-hidden="true"
-                    className="w-5 h-5"
-                  />
-                  <span>Logout</span>
-                </button>
-              </Menu.Item>
-            </div>
-          </Menu.Items>
-        </Transition>
-      </Menu>
+      {isClient && (
+        <Menu as="div" className="relative inline-block text-left">
+          <div>
+            <Menu.Button className="flex items-center justify-center px-5 py-2 space-x-3 border rounded hover:bg-gray-100 dark:hover:text-gray-800">
+              <CogIcon aria-hidden="true" className="w-5 h-5" />
+              <span>Settings</span>
+            </Menu.Button>
+          </div>
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="absolute right-0 w-40 mt-2 origin-top-right bg-white border divide-y divide-gray-100 rounded">
+              <div className="p-2">
+                <Menu.Item>
+                  <Link
+                    href="/account/settings"
+                    className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
+                  >
+                    <UserCircleIcon aria-hidden="true" className="w-5 h-5" />
+                    <span>Account</span>
+                  </Link>
+                </Menu.Item>
+                <Menu.Item>
+                  <Link
+                    href="/account/billing"
+                    className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
+                  >
+                    <CreditCardIcon aria-hidden="true" className="w-5 h-5" />
+                    <span>Billing</span>
+                  </Link>
+                </Menu.Item>
+              </div>
+              <div className="p-2">
+                <Menu.Item>
+                  <Link
+                    href="/"
+                    className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
+                  >
+                    <ComputerDesktopIcon aria-hidden="true" className="w-5 h-5" />
+                    <span>Landing Page</span>
+                  </Link>
+                </Menu.Item>
+                <Menu.Item>
+                  <button
+                    className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
+                    onClick={toggleTheme}
+                  >
+                    {theme === 'dark' ? (
+                      <>
+                        <SunIcon className="w-5 h-5" />
+                        <span>Light Mode</span>
+                      </>
+                    ) : (
+                      <>
+                        <MoonIcon className="w-5 h-5" />
+                        <span>Dark Mode</span>
+                      </>
+                    )}
+                  </button>
+                </Menu.Item>
+              </div>
+              <div className="p-2">
+                <Menu.Item>
+                  <button
+                    className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
+                    onClick={logOut}
+                  >
+                    <ArrowRightOnRectangleIcon
+                      aria-hidden="true"
+                      className="w-5 h-5"
+                    />
+                    <span>Logout</span>
+                  </button>
+                </Menu.Item>
+              </div>
+            </Menu.Items>
+          </Transition>
+        </Menu>
+      )}
     </div>
   );
 };

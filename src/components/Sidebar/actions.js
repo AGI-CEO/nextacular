@@ -1,3 +1,5 @@
+"use client";
+
 import { Fragment } from 'react';
 import dynamic from 'next/dynamic';
 import {
@@ -6,6 +8,7 @@ import {
   PlusIcon,
 } from '@heroicons/react/24/solid';
 import toast from 'react-hot-toast';
+import { usePush } from 'next/navigation';
 
 import Button from '@/components/Button/index';
 const Modal = dynamic(() => import('@/components/Modal/index'), {
@@ -14,8 +17,7 @@ const Modal = dynamic(() => import('@/components/Modal/index'), {
 import { useWorkspaces } from '@/hooks/data/index';
 import api from '@/lib/common/api';
 import { useWorkspace } from '@/providers/workspace';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 const Listbox = dynamic(() => import('@headlessui/react').then((mod) => mod.Listbox), {
   ssr: false,
 });
@@ -26,15 +28,11 @@ const Transition = dynamic(() => import('@headlessui/react').then((mod) => mod.T
 const Actions = () => {
   const { data, isLoading } = useWorkspaces();
   const { workspace, setWorkspace } = useWorkspace();
-  const router = useRouter(); // This will now be dynamically imported
   const [isSubmitting, setSubmittingState] = useState(false);
   const [name, setName] = useState('');
   const [showModal, setModalState] = useState(false);
-  const [Listbox, setListbox] = useState(null);
-  const [Transition, setTransition] = useState(null);
   const validName = name.length > 0 && name.length <= 16;
-
-  // Removed useEffect hook for dynamic import as Listbox and Transition are now imported dynamically at the top level
+  const push = usePush();
 
   const createWorkspace = (event) => {
     event.preventDefault();
@@ -61,7 +59,7 @@ const Actions = () => {
 
   const handleWorkspaceChange = (workspace) => {
     setWorkspace(workspace);
-    router.replace(`/account/${workspace?.slug}`);
+    push(`/account/${workspace?.slug}`);
   };
 
   const toggleModal = () => setModalState(!showModal);

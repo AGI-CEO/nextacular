@@ -1,13 +1,8 @@
-import dynamic from 'next/dynamic';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+"use client";
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-
-// Dynamically import useState for client-side rendering only
-const useState = dynamic(() => import('react').then((mod) => mod.useState), {
-  ssr: false,
-  loading: () => null,
-});
+import { useState } from 'react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const Hero = () => {
   const { status: sessionStatus } = useSession();

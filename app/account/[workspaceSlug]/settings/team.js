@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react';
-import { Menu, Transition } from '@headlessui/react';
+import dynamic from 'next/dynamic';
 import {
   ChevronDownIcon,
   DocumentDuplicateIcon,
@@ -23,6 +23,13 @@ import api from '@/lib/common/api';
 import { getWorkspace, isWorkspaceOwner } from '@/prisma/services/workspace';
 
 const MEMBERS_TEMPLATE = { email: '', role: TeamRole.MEMBER };
+
+const Menu = dynamic(() => import('@headlessui/react').then((mod) => mod.Menu), {
+  ssr: false,
+});
+const Transition = dynamic(() => import('@headlessui/react').then((mod) => mod.Transition), {
+  ssr: false,
+});
 
 const Team = ({ isTeamOwner, workspace }) => {
   const { data, isLoading } = useMembers(workspace.slug);
