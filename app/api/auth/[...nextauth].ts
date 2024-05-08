@@ -1,3 +1,4 @@
+import NextAuth from 'next-auth';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import EmailProvider from 'next-auth/providers/email';
 import prisma from '@/prisma/index';
@@ -5,7 +6,8 @@ import { html, text } from '@/config/email-templates/signin';
 import { emailConfig, sendMail } from '@/lib/server/mail';
 import { createPaymentAccount, getPayment } from '@/prisma/services/customer';
 
-export const authOptions = {
+// Define authOptions with the correct types and structure for NextAuth
+const authOptions = {
   adapter: PrismaAdapter(prisma),
   callbacks: {
     session: async ({ session, user }) => {
@@ -24,12 +26,12 @@ export const authOptions = {
   },
   debug: !(process.env.NODE_ENV === 'production'),
   events: {
-    signIn: async ({ user, account, isNewUser }) => {
+    signIn: async ({ user, isNewUser }) => {
       // Create a payment account for new users or users without payment information
       const customerPayment = await getPayment(user.email);
 
       if (isNewUser || customerPayment === null || user.createdAt === null) {
-        await createPaymentAccount(user.email, user.id);
+        await Promise.all([createPaymentAccount(user.email, user.id)]);
       }
     },
   },
@@ -53,7 +55,15 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
   },
 };
+
+export default NextAuth({
+  adapter: authOptions.adapter,
+  callbacks: authOptions.callbacks,
+  debug: authOptions.debug,
+  events: authOptions.events,
+  providers: authOptions.providers,
+  secret: authOptions.secret,
+  session: authOptions.session,
+});

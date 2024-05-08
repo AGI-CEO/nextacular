@@ -8,7 +8,7 @@ module.exports = {
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Important: return the modified config
     config.resolve.alias['@'] = path.join(__dirname, 'src');
-    config.resolve.alias['@/prisma'] = path.join(__dirname, 'src/prisma');
+    config.resolve.alias['@/prisma'] = path.join(__dirname, 'prisma');
     config.resolve.alias['@/components'] = path.join(__dirname, 'src/components');
     config.resolve.alias['@/config'] = path.join(__dirname, 'src/config');
     config.resolve.alias['@/hooks'] = path.join(__dirname, 'src/hooks');
