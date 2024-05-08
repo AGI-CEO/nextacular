@@ -3,12 +3,15 @@ import formatDistance from 'date-fns/formatDistance';
 import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import dynamic from 'next/dynamic';
 
 import Button from '@/components/Button/index';
 import Card from '@/components/Card/index';
 import Content from '@/components/Content/index';
 import Meta from '@/components/Meta/index';
-import Modal from '@/components/Modal/index';
+const Modal = dynamic(() => import('@/components/Modal/index'), {
+  ssr: false,
+});
 import { AccountLayout } from '@/layouts/index';
 import api from '@/lib/common/api';
 import { redirectToCheckout } from '@/lib/client/stripe';
