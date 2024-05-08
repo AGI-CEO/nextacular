@@ -14,15 +14,12 @@ const Modal = dynamic(() => import('@/components/Modal/index'), {
 import { useWorkspaces } from '@/hooks/data/index';
 import api from '@/lib/common/api';
 import { useWorkspace } from '@/providers/workspace';
-
-// Dynamically import hooks for client-side rendering only
-const useState = dynamic(() => import('react').then((mod) => mod.useState), {
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+const Listbox = dynamic(() => import('@headlessui/react').then((mod) => mod.Listbox), {
   ssr: false,
 });
-const useEffect = dynamic(() => import('react').then((mod) => mod.useEffect), {
-  ssr: false,
-});
-const useRouter = dynamic(() => import('next/router').then((mod) => mod.useRouter), {
+const Transition = dynamic(() => import('@headlessui/react').then((mod) => mod.Transition), {
   ssr: false,
 });
 
@@ -37,14 +34,7 @@ const Actions = () => {
   const [Transition, setTransition] = useState(null);
   const validName = name.length > 0 && name.length <= 16;
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      import('@headlessui/react').then((mod) => {
-        setListbox(mod.Listbox);
-        setTransition(mod.Transition);
-      });
-    }
-  }, []);
+  // Removed useEffect hook for dynamic import as Listbox and Transition are now imported dynamically at the top level
 
   const createWorkspace = (event) => {
     event.preventDefault();
