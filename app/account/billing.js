@@ -166,6 +166,15 @@ const Billing = ({ invoices, products }) => {
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
+  if (!session) {
+    // Redirect to the login page if the session is undefined
+    return {
+      redirect: {
+        destination: '/auth/login',
+        permanent: false,
+      },
+    };
+  }
   const customerPayment = await getPayment(session.user?.email);
   const [invoices, products] = await Promise.all([
     getInvoices(customerPayment?.paymentId),
@@ -173,6 +182,7 @@ export const getServerSideProps = async (context) => {
   ]);
   return {
     props: {
+      session, // Include session in the returned props
       invoices,
       products,
     },

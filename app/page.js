@@ -1,4 +1,4 @@
-import Meta from '@/components/Meta/index';
+import dynamic from 'next/dynamic';
 import { LandingLayout } from '@/layouts/index';
 import {
   CallToAction,
@@ -9,6 +9,8 @@ import {
   Pricing,
   Testimonial,
 } from '@/sections/index';
+
+const Meta = dynamic(() => import('@/components/Meta/index'), { ssr: false });
 
 const Home = () => {
   return (

@@ -1,12 +1,7 @@
-import { useEffect, useState } from 'react';
 import Head from 'next/head';
 
 const Meta = ({ author, description, keywords, noIndex, title }) => {
-  const [url, setUrl] = useState('');
-
-  useEffect(() => {
-    setUrl(window.location.origin);
-  }, []);
+  const url = typeof window !== 'undefined' ? window.location.origin : '';
 
   return (
     <Head>

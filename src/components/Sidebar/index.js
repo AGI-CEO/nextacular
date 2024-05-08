@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 import Actions from './actions';
@@ -9,6 +9,12 @@ import { useWorkspace } from '@/providers/workspace';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 
 const staticMenu = sidebarMenu();
+
+// Dynamically import useState to use it only on the client-side
+const useState = dynamic(() => import('react').then((mod) => mod.useState), {
+  ssr: false,
+  loading: () => null,
+});
 
 const Sidebar = ({ menu }) => {
   const [showMenu, setMenuVisibility] = useState(false);
