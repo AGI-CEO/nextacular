@@ -15,14 +15,21 @@ import { useWorkspaces } from '@/hooks/data/index';
 import api from '@/lib/common/api';
 import { useWorkspace } from '@/providers/workspace';
 
-import { useState, useEffect, useRouter } from 'react';
-
-// Removed top-level useState and useEffect hooks
+// Dynamically import hooks for client-side rendering only
+const useState = dynamic(() => import('react').then((mod) => mod.useState), {
+  ssr: false,
+});
+const useEffect = dynamic(() => import('react').then((mod) => mod.useEffect), {
+  ssr: false,
+});
+const useRouter = dynamic(() => import('next/router').then((mod) => mod.useRouter), {
+  ssr: false,
+});
 
 const Actions = () => {
   const { data, isLoading } = useWorkspaces();
   const { workspace, setWorkspace } = useWorkspace();
-  const router = useRouter();
+  const router = useRouter(); // This will now be dynamically imported
   const [isSubmitting, setSubmittingState] = useState(false);
   const [name, setName] = useState('');
   const [showModal, setModalState] = useState(false);
