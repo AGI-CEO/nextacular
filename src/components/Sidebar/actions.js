@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { Listbox, Transition } from '@headlessui/react';
+import dynamic from 'next/dynamic';
 import {
   CheckIcon,
   ChevronUpDownIcon,
@@ -19,7 +19,12 @@ const isClient = typeof window !== 'undefined';
 const useState = isClient ? require('react').useState : () => [null, () => {}];
 const useRouter = isClient ? require('next/router').useRouter : () => ({});
 
-// Removed duplicate useRouter declaration
+const Listbox = dynamic(() => import('@headlessui/react').then((mod) => mod.Listbox), {
+  ssr: false,
+});
+const Transition = dynamic(() => import('@headlessui/react').then((mod) => mod.Transition), {
+  ssr: false,
+});
 
 const Actions = () => {
   const { data, isLoading } = useWorkspaces();
