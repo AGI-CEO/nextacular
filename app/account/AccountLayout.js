@@ -4,7 +4,10 @@ import dynamic from 'next/dynamic';
 
 import Content from '@/components/Content/index';
 import Header from '@/components/Header/index';
-import Sidebar from '@/components/Sidebar/index';
+// Dynamically import Sidebar for client-side rendering only
+const Sidebar = dynamic(() => import('@/components/Sidebar/index'), {
+  ssr: false,
+});
 import menu from '@/config/menu/index';
 import { useWorkspace } from '@/providers/workspace';
 
