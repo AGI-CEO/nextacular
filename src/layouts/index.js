@@ -1,5 +1,5 @@
 import AccountLayout from '../../app/account/AccountLayout';
-import AuthLayout from './AuthLayout';
+import AuthLayout from '../../app/auth/AuthLayout';
 import LandingLayout from './LandingLayout';
 import PublicLayout from './PublicLayout';
 
