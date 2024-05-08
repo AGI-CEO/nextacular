@@ -4,12 +4,15 @@ import { getSession, signOut } from 'next-auth/react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import toast from 'react-hot-toast';
 import isEmail from 'validator/lib/isEmail';
+import dynamic from 'next/dynamic';
 
 import Button from '@/components/Button/index';
 import Card from '@/components/Card/index';
 import Content from '@/components/Content/index';
 import Meta from '@/components/Meta';
-import Modal from '@/components/Modal/index';
+const Modal = dynamic(() => import('@/components/Modal/index'), {
+  ssr: false,
+});
 import { AccountLayout } from '@/layouts/index';
 import api from '@/lib/common/api';
 import { getUser } from '@/prisma/services/user';
