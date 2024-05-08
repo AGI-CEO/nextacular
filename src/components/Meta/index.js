@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 
+// "use client" directive to mark this component for client-side rendering only
 const Meta = ({ author, description, keywords, noIndex, title }) => {
   const [url, setUrl] = useState('');
 
