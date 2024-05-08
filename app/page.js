@@ -1,8 +1,31 @@
-export default function HomePage() {
+import Meta from '@/components/Meta/index';
+import { LandingLayout } from '@/layouts/index';
+import {
+  CallToAction,
+  Features,
+  Footer,
+  Guides,
+  Hero,
+  Pricing,
+  Testimonial,
+} from '@/sections/index';
+
+const Home = () => {
   return (
-    <div>
-      <h1>Welcome to Nextacular</h1>
-      <p>This is a placeholder for the homepage.</p>
-    </div>
+    <LandingLayout>
+      <Meta
+        title="NextJS SaaS Boilerplate"
+        description="A boilerplate for your NextJS SaaS projects."
+      />
+      <Hero />
+      <Features />
+      <Pricing />
+      <Guides />
+      <Testimonial />
+      <CallToAction />
+      <Footer />
+    </LandingLayout>
   );
-}
+};
+
+export default Home;
