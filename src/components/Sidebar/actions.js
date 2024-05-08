@@ -8,7 +8,9 @@ import {
 import toast from 'react-hot-toast';
 
 import Button from '@/components/Button/index';
-import Modal from '@/components/Modal/index';
+const Modal = dynamic(() => import('@/components/Modal/index'), {
+  ssr: false,
+});
 import { useWorkspaces } from '@/hooks/data/index';
 import api from '@/lib/common/api';
 import { useWorkspace } from '@/providers/workspace';
