@@ -13,11 +13,12 @@ import { useWorkspaces } from '@/hooks/data/index';
 import api from '@/lib/common/api';
 import { useWorkspace } from '@/providers/workspace';
 
-// Conditionally use hooks that are only meant for the client-side
-const isClient = typeof window !== 'undefined';
-
-const useState = isClient ? require('react').useState : () => [null, () => {}];
-const useRouter = isClient ? require('next/router').useRouter : () => ({});
+const useState = dynamic(() => import('react').then((mod) => mod.useState), {
+  ssr: false,
+});
+const useRouter = dynamic(() => import('next/router').then((mod) => mod.useRouter), {
+  ssr: false,
+});
 
 const Listbox = dynamic(() => import('@headlessui/react').then((mod) => mod.Listbox), {
   ssr: false,
