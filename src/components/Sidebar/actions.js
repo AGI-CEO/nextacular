@@ -8,7 +8,7 @@ import {
   PlusIcon,
 } from '@heroicons/react/24/solid';
 import toast from 'react-hot-toast';
-import { usePush } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 import Button from '@/components/Button/index';
 const Modal = dynamic(() => import('@/components/Modal/index'), {
@@ -35,7 +35,7 @@ const Actions = () => {
   const [name, setName] = useState('');
   const [showModal, setModalState] = useState(false);
   const validName = name.length > 0 && name.length <= 16;
-  const push = usePush();
+  const router = useRouter(); // Use useRouter hook to get the push method
 
   const createWorkspace = (event) => {
     event.preventDefault();
@@ -60,10 +60,18 @@ const Actions = () => {
 
   const handleNameChange = (event) => setName(event.target.value);
 
+  const [selectedWorkspaceSlug, setSelectedWorkspaceSlug] = useState(null);
+
   const handleWorkspaceChange = (workspace) => {
     setWorkspace(workspace);
-    push(`/account/${workspace?.slug}`);
+    setSelectedWorkspaceSlug(workspace?.slug);
   };
+
+  useEffect(() => {
+    if (selectedWorkspaceSlug) {
+      router.push(`/account/${selectedWorkspaceSlug}`);
+    }
+  }, [selectedWorkspaceSlug, router]);
 
   const toggleModal = () => setModalState(!showModal);
 
