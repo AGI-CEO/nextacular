@@ -1,6 +1,6 @@
 "use client"; // This directive marks this module as a Client Component
 
-import { ThemeProvider } from 'next-themes';
+import dynamic from 'next/dynamic';
 import { SWRConfig } from 'swr';
 import { SessionProvider } from 'next-auth/react';
 import TopBarProgress from 'react-topbar-progress-indicator';
@@ -12,6 +12,11 @@ import swrConfig from '@/config/swr/index';
 import WorkspaceProvider from '@/providers/workspace';
 
 import '@/styles/globals.css';
+
+// Dynamically import ThemeProvider with ssr set to false to ensure it's only used client-side
+const ThemeProvider = dynamic(() => import('next-themes').then((mod) => mod.ThemeProvider), {
+  ssr: false,
+});
 
 const Layout = ({ children, pageProps }) => {
   const swrOptions = swrConfig();
@@ -25,26 +30,24 @@ const Layout = ({ children, pageProps }) => {
   }, []); // Dependency array for client-side effects
 
   return (
-    <html lang="en">
-      <SessionProvider session={pageProps?.session}>
-        <SWRConfig value={swrOptions}>
-          <ThemeProvider attribute="class">
-            <WorkspaceProvider>
-              <TopBarProgress />
-              <body>
-                <header>
-                  {/* Navigation bar, logo, etc. */}
-                </header>
-                <main>{children}</main>
-                <footer>
-                  {/* Footer content */}
-                </footer>
-              </body>
-            </WorkspaceProvider>
-          </ThemeProvider>
-        </SWRConfig>
-      </SessionProvider>
-    </html>
+    <SessionProvider session={pageProps?.session}>
+      <SWRConfig value={swrOptions}>
+        <ThemeProvider attribute="class">
+          <WorkspaceProvider>
+            <TopBarProgress />
+            <div> {/* Changed from <body> to <div> to avoid hydration issues */}
+              <header>
+                {/* Navigation bar, logo, etc. */}
+              </header>
+              <main>{children}</main>
+              <footer>
+                {/* Footer content */}
+              </footer>
+            </div>
+          </WorkspaceProvider>
+        </ThemeProvider>
+      </SWRConfig>
+    </SessionProvider>
   );
 };
 

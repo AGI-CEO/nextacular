@@ -18,6 +18,7 @@ const useRouterDynamic = dynamic(() => import('next/navigation').then((mod) => m
   ssr: false,
 });
 
+"use client";
 const Welcome = () => {
   const router = useRouterDynamic();
   const { data: invitationsData, isLoading: isFetchingInvitations } =
