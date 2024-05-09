@@ -30,24 +30,31 @@ const Layout = ({ children, pageProps }) => {
   }, []); // Dependency array for client-side effects
 
   return (
-    <SessionProvider session={pageProps?.session}>
-      <SWRConfig value={swrOptions}>
-        <ThemeProvider attribute="class">
-          <WorkspaceProvider>
-            <TopBarProgress />
-            <div> {/* Changed from <body> to <div> to avoid hydration issues */}
-              <header>
-                {/* Navigation bar, logo, etc. */}
-              </header>
-              <main>{children}</main>
-              <footer>
-                {/* Footer content */}
-              </footer>
-            </div>
-          </WorkspaceProvider>
-        </ThemeProvider>
-      </SWRConfig>
-    </SessionProvider>
+    <html lang="en"> {/* Ensure the root layout includes the html tag */}
+      <head> {/* Head tag for including any head elements */}
+        {/* Any head elements here */}
+      </head>
+      <body> {/* Body tag to wrap the main content */}
+        <SessionProvider session={pageProps?.session}>
+          <SWRConfig value={swrOptions}>
+            <ThemeProvider attribute="class">
+              <WorkspaceProvider>
+                <TopBarProgress />
+                <div> {/* Main content wrapper */}
+                  <header>
+                    {/* Navigation bar, logo, etc. */}
+                  </header>
+                  <main>{children}</main>
+                  <footer>
+                    {/* Footer content */}
+                  </footer>
+                </div>
+              </WorkspaceProvider>
+            </ThemeProvider>
+          </SWRConfig>
+        </SessionProvider>
+      </body>
+    </html>
   );
 };
 
