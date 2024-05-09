@@ -15,7 +15,7 @@ import menu from '@/config/menu/index';
 import { useWorkspace } from '@/providers/workspace';
 
 const AccountLayout = ({ children }) => {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const { workspace } = useWorkspace();
 
@@ -24,6 +24,10 @@ const AccountLayout = ({ children }) => {
     // Check if window is defined to ensure this runs only in the browser
     if (typeof window !== 'undefined' && status === 'unauthenticated') {
       router.replace('/auth/login');
+    }
+    // If the session is authenticated, navigate to the account page
+    else if (status === 'authenticated') {
+      router.replace('/account');
     }
   }, [status, router]);
 
