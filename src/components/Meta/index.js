@@ -1,6 +1,12 @@
 import Head from 'next/head';
 
-const Meta = ({ author, description, keywords, noIndex, title }) => {
+const Meta = ({
+  author = '',
+  description = '',
+  keywords = '',
+  noIndex = false,
+  title
+}) => {
   const url = typeof window !== 'undefined' ? window.location.origin : '';
 
   return (
@@ -29,13 +35,6 @@ const Meta = ({ author, description, keywords, noIndex, title }) => {
       {noIndex && <meta name="robots" content="noindex" />}
     </Head>
   );
-};
-
-Meta.defaultProps = {
-  author: '',
-  description: '',
-  keywords: '',
-  noIndex: false,
 };
 
 export default Meta;
