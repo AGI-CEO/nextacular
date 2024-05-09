@@ -6,8 +6,6 @@ import {
   CogIcon,
   CreditCardIcon,
   ComputerDesktopIcon,
-  MoonIcon,
-  SunIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -17,7 +15,7 @@ const Menu = dynamic(() => import('@headlessui/react').then((mod) => mod.Menu), 
   ssr: false,
 });
 
-const ThemeToggler = dynamic(() => import('./ThemeToggler'), {
+const ThemeToggler = dynamic(() => import('../ThemeToggler'), {
   ssr: false,
 });
 const Transition = dynamic(() => import('@headlessui/react').then((mod) => mod.Transition), {
