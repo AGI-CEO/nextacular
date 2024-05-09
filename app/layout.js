@@ -16,6 +16,9 @@ import '@/styles/globals.css';
 // Dynamically import ThemeProvider with ssr set to false to ensure it's only used client-side
 const ThemeProvider = dynamic(() => import('next-themes').then((mod) => mod.ThemeProvider), {
   ssr: false,
+  loadableGenerated: {
+    webpack: () => [require.resolveWeak('next-themes')],
+  },
 });
 
 const Layout = ({ children, pageProps }) => {
@@ -30,24 +33,29 @@ const Layout = ({ children, pageProps }) => {
   }, []); // Dependency array for client-side effects
 
   return (
-    <SessionProvider session={pageProps?.session}>
-      <SWRConfig value={swrOptions}>
-        <ThemeProvider attribute="class">
-          <WorkspaceProvider>
-            <TopBarProgress />
-            <div> {/* Main content wrapper */}
-              <header>
-                {/* Navigation bar, logo, etc. */}
-              </header>
-              <main>{children}</main>
-              <footer>
-                {/* Footer content */}
-              </footer>
-            </div>
-          </WorkspaceProvider>
-        </ThemeProvider>
-      </SWRConfig>
-    </SessionProvider>
+    // The following html and body tags are required for Next.js 14 RootLayout
+    <html lang="en">
+      <body>
+        <SessionProvider session={pageProps?.session}>
+          <SWRConfig value={swrOptions}>
+            <ThemeProvider attribute="class">
+              <WorkspaceProvider>
+                <TopBarProgress />
+                <div> {/* Main content wrapper */}
+                  <header>
+                    {/* Navigation bar, logo, etc. */}
+                  </header>
+                  <main>{children}</main>
+                  <footer>
+                    {/* Footer content */}
+                  </footer>
+                </div>
+              </WorkspaceProvider>
+            </ThemeProvider>
+          </SWRConfig>
+        </SessionProvider>
+      </body>
+    </html>
   );
 };
 
