@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 
 import Content from '@/components/Content/index';
@@ -11,20 +13,20 @@ const Sidebar = dynamic(() => import('@/components/Sidebar/index'), {
 import menu from '@/config/menu/index';
 import { useWorkspace } from '@/providers/workspace';
 
-// Dynamically import useRouter to use it only on the client-side
-const useRouter = dynamic(() => import('next/router'), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
-
 const AccountLayout = ({ children }) => {
   const { status } = useSession();
   const router = useRouter();
   const { workspace } = useWorkspace();
 
-  if (typeof window !== 'undefined' && status === 'unauthenticated') {
-    router.replace('/auth/login');
-  }
+  // Ensure router logic is only executed on the client side
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      // Check if window is defined to ensure this runs only in the browser
+      if (typeof window !== 'undefined') {
+        router.replace('/auth/login');
+      }
+    }
+  }, [status, router]);
 
   if (status === 'loading') return <></>;
   return (

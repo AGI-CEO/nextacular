@@ -1,7 +1,13 @@
 import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
-import { useTheme } from 'next-themes';
-import { Toaster } from 'react-hot-toast';
+
+// Dynamically import useTheme for client-side rendering only
+const useTheme = dynamic(() => import('next-themes').then((mod) => mod.useTheme), {
+  ssr: false,
+});
+const Toaster = dynamic(() => import('react-hot-toast').then((mod) => mod.Toaster), {
+  ssr: false,
+});
 
 // Dynamically import useEffect and useRouter for client-side rendering only
 const useEffect = dynamic(() => import('react').then((mod) => mod.useEffect), {

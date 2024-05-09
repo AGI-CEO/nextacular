@@ -1,3 +1,5 @@
+"use client";
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import toast from 'react-hot-toast';
 
@@ -10,15 +12,10 @@ import { AccountLayout } from '@/layouts/index';
 import api from '@/lib/common/api';
 import { useWorkspace } from '@/providers/workspace';
 
-const useStateDynamic = dynamic(() => import('react').then((mod) => mod.useState), {
-  ssr: false,
-});
-
 const useRouterDynamic = dynamic(() => import('next/navigation').then((mod) => mod.useRouter), {
   ssr: false,
 });
 
-"use client";
 const Welcome = () => {
   const router = useRouterDynamic();
   const { data: invitationsData, isLoading: isFetchingInvitations } =
@@ -26,7 +23,7 @@ const Welcome = () => {
   const { data: workspacesData, isLoading: isFetchingWorkspaces } =
     useWorkspaces();
   const { setWorkspace } = useWorkspace();
-  const [isSubmitting, setSubmittingState] = useStateDynamic(false);
+  const [isSubmitting, setSubmittingState] = useState(false);
 
   const accept = (memberId) => {
     setSubmittingState(true);

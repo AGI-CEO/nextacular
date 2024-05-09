@@ -14,7 +14,10 @@ import Button from '@/components/Button/index';
 const Modal = dynamic(() => import('@/components/Modal/index'), {
   ssr: false,
 });
-import { useWorkspaces } from '@/hooks/data/index';
+const useWorkspaces = dynamic(() => import('@/hooks/data').then((hooks) => hooks.useWorkspaces), {
+  ssr: false,
+  loading: () => null,
+});
 import api from '@/lib/common/api';
 import { useWorkspace } from '@/providers/workspace';
 import { useState } from 'react';

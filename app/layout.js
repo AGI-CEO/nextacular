@@ -45,7 +45,8 @@ const Layout = ({ children, pageProps }) => {
                   <header>
                     {/* Navigation bar, logo, etc. */}
                   </header>
-                  <main>{children}</main>
+                  {/* Removed the <main> tag to prevent nesting within AuthLayout's <main> tag */}
+                  {children}
                   <footer>
                     {/* Footer content */}
                   </footer>
