@@ -12,9 +12,12 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
-import { useTheme } from 'next-themes';
 
 const Menu = dynamic(() => import('@headlessui/react').then((mod) => mod.Menu), {
+  ssr: false,
+});
+
+const ThemeToggler = dynamic(() => import('./ThemeToggler'), {
   ssr: false,
 });
 const Transition = dynamic(() => import('@headlessui/react').then((mod) => mod.Transition), {
@@ -23,7 +26,6 @@ const Transition = dynamic(() => import('@headlessui/react').then((mod) => mod.T
 
 const Header = () => {
   const { data: sessionData } = useSession();
-  const { theme, setTheme } = useTheme();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -35,13 +37,6 @@ const Header = () => {
     const result = confirm('Are you sure you want to logout?');
     if (result) {
       signOut({ callbackUrl: '/' });
-    }
-  };
-
-  const toggleTheme = (event) => {
-    event.preventDefault();
-    if (setTheme) {
-      setTheme(theme === 'dark' ? 'light' : 'dark');
     }
   };
 
@@ -103,22 +98,7 @@ const Header = () => {
                   </Link>
                 </Menu.Item>
                 <Menu.Item>
-                  <button
-                    className="flex items-center w-full px-2 py-2 space-x-2 text-sm text-gray-800 rounded hover:bg-blue-600 hover:text-white group"
-                    onClick={toggleTheme}
-                  >
-                    {theme === 'dark' ? (
-                      <>
-                        <SunIcon className="w-5 h-5" />
-                        <span>Light Mode</span>
-                      </>
-                    ) : (
-                      <>
-                        <MoonIcon className="w-5 h-5" />
-                        <span>Dark Mode</span>
-                      </>
-                    )}
-                  </button>
+                  <ThemeToggler />
                 </Menu.Item>
               </div>
               <div className="p-2">

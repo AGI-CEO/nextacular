@@ -25,22 +25,26 @@ const Layout = ({ children, pageProps }) => {
   }, []); // Dependency array for client-side effects
 
   return (
-    <SessionProvider session={pageProps?.session}>
-      <SWRConfig value={swrOptions}>
-        <ThemeProvider attribute="class">
-          <WorkspaceProvider>
-            <TopBarProgress />
-            <header>
-              {/* Navigation bar, logo, etc. */}
-            </header>
-            <main>{children}</main>
-            <footer>
-              {/* Footer content */}
-            </footer>
-          </WorkspaceProvider>
-        </ThemeProvider>
-      </SWRConfig>
-    </SessionProvider>
+    <html lang="en">
+      <SessionProvider session={pageProps?.session}>
+        <SWRConfig value={swrOptions}>
+          <ThemeProvider attribute="class">
+            <WorkspaceProvider>
+              <TopBarProgress />
+              <body>
+                <header>
+                  {/* Navigation bar, logo, etc. */}
+                </header>
+                <main>{children}</main>
+                <footer>
+                  {/* Footer content */}
+                </footer>
+              </body>
+            </WorkspaceProvider>
+          </ThemeProvider>
+        </SWRConfig>
+      </SessionProvider>
+    </html>
   );
 };
 
