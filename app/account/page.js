@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation'; // Updated import for useRouter
 import toast from 'react-hot-toast';
 
 import Button from '@/components/Button/index';
@@ -12,12 +12,8 @@ import { AccountLayout } from '@/layouts/index';
 import api from '@/lib/common/api';
 import { useWorkspace } from '@/providers/workspace';
 
-const useRouterDynamic = dynamic(() => import('next/navigation').then((mod) => mod.useRouter), {
-  ssr: false,
-});
-
 const Welcome = () => {
-  const router = useRouterDynamic();
+  const router = useRouter();
   const { data: invitationsData, isLoading: isFetchingInvitations } =
     useInvitations();
   const { data: workspacesData, isLoading: isFetchingWorkspaces } =

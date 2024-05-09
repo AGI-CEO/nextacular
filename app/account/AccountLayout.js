@@ -1,7 +1,8 @@
+"use client";
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { Toaster } from 'react-hot-toast';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
 import Content from '@/components/Content/index';
@@ -18,13 +19,11 @@ const AccountLayout = ({ children }) => {
   const router = useRouter();
   const { workspace } = useWorkspace();
 
-  // Ensure router logic is only executed on the client side
+  // Redirect unauthenticated users to the login page
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      // Check if window is defined to ensure this runs only in the browser
-      if (typeof window !== 'undefined') {
-        router.replace('/auth/login');
-      }
+    // Check if window is defined to ensure this runs only in the browser
+    if (typeof window !== 'undefined' && status === 'unauthenticated') {
+      router.replace('/auth/login');
     }
   }, [status, router]);
 
