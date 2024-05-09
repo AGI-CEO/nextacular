@@ -1,17 +1,20 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { Bars3Icon } from '@heroicons/react/24/outline';
+import sidebarMenu from '@/config/menu/sidebar-static';
+import { useWorkspace } from '@/providers/workspace';
 
-// Dynamically import Menu and Actions for client-side rendering only
+// Dynamically import Menu, Actions, and useWorkspaces for client-side rendering only
 const Menu = dynamic(() => import('./menu'), {
   ssr: false,
 });
 const Actions = dynamic(() => import('./actions'), {
   ssr: false,
 });
-import sidebarMenu from '@/config/menu/sidebar-static';
-import { useWorkspaces } from '@/hooks/data';
-import { useWorkspace } from '@/providers/workspace';
-import { Bars3Icon } from '@heroicons/react/24/outline';
+const useWorkspaces = dynamic(() => import('@/hooks/data').then((hooks) => hooks.useWorkspaces), {
+  ssr: false,
+  loading: () => null,
+});
 
 const staticMenu = sidebarMenu();
 
