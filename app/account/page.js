@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 import Button from '@/components/Button/index';
@@ -15,8 +14,12 @@ const useStateDynamic = dynamic(() => import('react').then((mod) => mod.useState
   ssr: false,
 });
 
+const useRouterDynamic = dynamic(() => import('next/navigation').then((mod) => mod.useRouter), {
+  ssr: false,
+});
+
 const Welcome = () => {
-  const router = useRouter();
+  const router = useRouterDynamic();
   const { data: invitationsData, isLoading: isFetchingInvitations } =
     useInvitations();
   const { data: workspacesData, isLoading: isFetchingWorkspaces } =
