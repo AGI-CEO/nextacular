@@ -1,3 +1,4 @@
+import NextAuth from 'next-auth';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import EmailProvider from 'next-auth/providers/email';
 import prisma from '@/prisma/index';
@@ -5,7 +6,8 @@ import { html, text } from '@/config/email-templates/signin';
 import { emailConfig, sendMail } from '@/lib/server/mail';
 import { createPaymentAccount, getPayment } from '@/prisma/services/customer';
 
-export const authOptions = {
+// Define authOptions with the correct types and structure for NextAuth
+const authOptions = {
   adapter: PrismaAdapter(prisma),
   callbacks: {
     session: async ({ session, user }) => {
@@ -52,8 +54,17 @@ export const authOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
+    // Correct the strategy type to match the expected type for SessionOptions
+    strategy: 'jwt' as const,
   },
 };
+
+export default NextAuth({
+  adapter: authOptions.adapter,
+  callbacks: authOptions.callbacks,
+  debug: authOptions.debug,
+  events: authOptions.events,
+  providers: authOptions.providers,
+  secret: authOptions.secret,
+  session: authOptions.session,
+});

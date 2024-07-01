@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+"use client";
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useState } from 'react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const Hero = () => {
   const { status: sessionStatus } = useSession();
@@ -56,10 +57,10 @@ const Hero = () => {
           </p>
         </div>
         <div className="flex items-center justify-center space-x-5">
-          <a className="px-10 py-3 text-center text-white bg-blue-600 rounded shadow hover:bg-blue-500">
+          <a href="#" className="px-10 py-3 text-center text-white bg-blue-600 rounded shadow hover:bg-blue-500">
             Get Started
           </a>
-          <a className="px-10 py-3 text-center text-blue-600 rounded shadow hover:bg-blue-50">
+          <a href="#" className="px-10 py-3 text-center text-blue-600 rounded shadow hover:bg-blue-50">
             Live Demo
           </a>
         </div>

@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
 import Head from 'next/head';
 
-const Meta = ({ author, description, keywords, noIndex, title }) => {
-  const [url, setUrl] = useState('');
-
-  useEffect(() => {
-    setUrl(window.location.origin);
-  }, []);
+const Meta = ({
+  author = '',
+  description = '',
+  keywords = '',
+  noIndex = false,
+  title
+}) => {
+  const url = typeof window !== 'undefined' ? window.location.origin : '';
 
   return (
     <Head>
@@ -34,13 +35,6 @@ const Meta = ({ author, description, keywords, noIndex, title }) => {
       {noIndex && <meta name="robots" content="noindex" />}
     </Head>
   );
-};
-
-Meta.defaultProps = {
-  author: '',
-  description: '',
-  keywords: '',
-  noIndex: false,
 };
 
 export default Meta;

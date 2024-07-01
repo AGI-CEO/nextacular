@@ -1,6 +1,6 @@
-import AccountLayout from './AccountLayout';
-import AuthLayout from './AuthLayout';
-import LandingLayout from './LandingLayout';
-import PublicLayout from './PublicLayout';
+import AccountLayout from '../../app/account/AccountLayout';
+import AuthLayout from '../../app/layouts/AuthLayout'; // Corrected import path
+import LandingLayout from '../../app/LandingLayout'; // Corrected import path
+import PublicLayout from '../../app/PublicLayout'; // Corrected import path
 
 export { AccountLayout, AuthLayout, LandingLayout, PublicLayout };

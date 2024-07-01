@@ -1,10 +1,14 @@
-import useSWR from 'swr';
+import dynamic from 'next/dynamic';
 
 const useDomains = (slug) => {
   const apiRoute = `/api/workspace/${slug}/domains`;
-  const { data, error } = useSWR(`${apiRoute}`);
+  const useSWR = dynamic(() => import('swr').then((mod) => mod.default), {
+    ssr: false,
+    loading: () => ({ data: null, error: null }),
+  });
+  const { data, error } = useSWR(apiRoute);
   return {
-    ...data,
+    domains: data,
     isLoading: !error && !data,
     isError: error,
   };
