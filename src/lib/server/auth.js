@@ -9,16 +9,16 @@ export const authOptions = {
   adapter: PrismaAdapter(prisma),
   callbacks: {
     session: async ({ session, user }) => {
-      // Enrich the session object with user details and subscription information
-      if (session.user) {
-        const customerPayment = await getPayment(user.email);
-        session.user.userId = user.id;
-
-        if (customerPayment) {
-          session.user.subscription = customerPayment.subscriptionType;
-        }
-      }
-
+      // Temporary simulation of an authenticated session for testing purposes
+      // TODO: Remove this override before moving to production
+      session.user = {
+        id: 'temp-user-id',
+        name: 'Temp User',
+        email: 'temp-user@email.com',
+        image: 'temp-user-image-url',
+        subscription: 'temp-subscription-type'
+      };
+      session.expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days from now
       return session;
     },
   },

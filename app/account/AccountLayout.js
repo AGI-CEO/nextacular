@@ -22,12 +22,15 @@ const AccountLayout = ({ children }) => {
   // Redirect unauthenticated users to the login page
   useEffect(() => {
     // Check if window is defined to ensure this runs only in the browser
-    if (typeof window !== 'undefined' && status === 'unauthenticated') {
-      router.replace('/auth/login');
-    }
-    // If the session is authenticated, navigate to the account page
-    else if (status === 'authenticated') {
-      router.replace('/account');
+    if (typeof window !== 'undefined') {
+      // Check if the session token exists in local storage
+      const sessionToken = localStorage.getItem('next-auth.session-token');
+      // If the session token exists, consider the user as authenticated
+      if (sessionToken) {
+        router.replace('/account');
+      } else if (status === 'unauthenticated') {
+        router.replace('/auth/login');
+      }
     }
   }, [status, router]);
 
