@@ -1,7 +1,6 @@
 "use client";
 
 import { Fragment } from 'react';
-import dynamic from 'next/dynamic';
 import {
   CheckIcon,
   ChevronUpDownIcon,
@@ -9,24 +8,14 @@ import {
 } from '@heroicons/react/24/solid';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import { Listbox, Transition } from '@headlessui/react';
 
 import Button from '@/components/Button/index';
-const Modal = dynamic(() => import('@/components/Modal/index'), {
-  ssr: false,
-});
-const useWorkspaces = dynamic(() => import('@/hooks/data').then((hooks) => hooks.useWorkspaces), {
-  ssr: false,
-  loading: () => null,
-});
+import Modal from '@/components/Modal/index';
+import { useWorkspaces } from '@/hooks/data';
 import api from '@/lib/common/api';
 import { useWorkspace } from '@/providers/workspace';
-import { useState } from 'react';
-const Listbox = dynamic(() => import('@headlessui/react').then((mod) => mod.Listbox), {
-  ssr: false,
-});
-const Transition = dynamic(() => import('@headlessui/react').then((mod) => mod.Transition), {
-  ssr: false,
-});
+import { useState, useEffect } from 'react';
 
 const Actions = () => {
   const { data, isLoading } = useWorkspaces();
@@ -36,6 +25,18 @@ const Actions = () => {
   const [showModal, setModalState] = useState(false);
   const validName = name.length > 0 && name.length <= 16;
   const router = useRouter(); // Use useRouter hook to get the push method
+
+  const [selectedWorkspaceSlug, setSelectedWorkspaceSlug] = useState(null);
+
+  useEffect(() => {
+    // Ensure the router is ready before attempting to navigate
+    if (!router.isReady) return;
+
+    // If a workspace slug is selected, navigate to the workspace's page
+    if (selectedWorkspaceSlug) {
+      router.push(`/account/${selectedWorkspaceSlug}`);
+    }
+  }, [router, selectedWorkspaceSlug]);
 
   const createWorkspace = (event) => {
     event.preventDefault();
@@ -60,18 +61,26 @@ const Actions = () => {
 
   const handleNameChange = (event) => setName(event.target.value);
 
-  const [selectedWorkspaceSlug, setSelectedWorkspaceSlug] = useState(null);
-
-  const handleWorkspaceChange = (workspace) => {
-    setWorkspace(workspace);
-    setSelectedWorkspaceSlug(workspace?.slug);
+  const handleWorkspaceChange = (selectedWorkspace) => {
+    setWorkspace(selectedWorkspace);
+    setSelectedWorkspaceSlug((prevSlug) => {
+      if (prevSlug !== selectedWorkspace.slug) {
+        return selectedWorkspace.slug;
+      }
+      return prevSlug;
+    });
   };
 
   useEffect(() => {
-    if (selectedWorkspaceSlug) {
-      router.push(`/account/${selectedWorkspaceSlug}`);
+    if (!router.isReady || !selectedWorkspaceSlug) return;
+    router.push(`/account/${selectedWorkspaceSlug}`);
+  }, [router, selectedWorkspaceSlug]);
+
+  useEffect(() => {
+    if (workspace) {
+      setSelectedWorkspaceSlug(workspace.slug);
     }
-  }, [selectedWorkspaceSlug, router]);
+  }, [workspace]);
 
   const toggleModal = () => setModalState(!showModal);
 
